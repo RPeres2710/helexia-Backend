@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELEXIA UFV SECURITY MONITORING - MOVISAFE AMLAT</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #143d0f, #013046);
+            color: white;
+            overflow: hidden;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgb(0, 0, 0);
+            color: rgb(252, 252, 252);
+            border: none;
+            padding: 8px 12px;
+            font-size: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(32, 17, 17, 0.363);
+        }
+
+        .menu-button:hover, .menu-button:focus {
+            background: #0a0909;
+            outline: none;
+            box-shadow: 0 0 10px rgba(2, 1, 1, 0.158);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: rgba(16, 16, 17, 0.815);
+            padding: 1rem;
+            padding-top: 50px;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-280px);
+        }
+
+        .state-section {
+            margin-bottom: 20px;
+        }
+
+        .state-header {
+            background: linear-gradient(45deg, rgba(60, 60, 80, 0.8), rgba(80, 80, 100, 0.8));
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            border: 1px solid rgba(3, 3, 3, 0.856);
+            transition: all 0.3s ease;
+        }
+
+        .state-header:hover {
+            background: linear-gradient(45deg, rgba(110, 97, 97, 0.9), rgba(185, 185, 211, 0.9));
+            transform: translateX(5px);
+        }
+
+        .state-cities {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(40, 40, 50, 0.7);
+            border-radius: 0 0 8px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: none;
+        }
+
+        .state-cities.expanded {
+            max-height: 500px;
+        }
+
+        .state-cities a {
+            color: #e0e0e0;
+            text-decoration: none;
+            display: block;
+            padding: 10px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .state-cities a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #4fc3f7;
+            color: white;
+        }
+
+        .region-legend {
+            background: rgba(40, 40, 50, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+        }
+
+        #main {
+            flex-grow: 1;
+            padding: 1rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2));
+            z-index: -1;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+            font-weight: bold;
+            margin: 0;
+            padding: 10px 20px;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 200px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+            transition: width 0.3s ease;
+            z-index: 10;
+        }
+
+        .map-container {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 150px);
+            gap: 10px;
+        }
+
+        #map {
+            width: 60%;
+            height: 100%;
+            border-radius: 12px;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(224, 153, 153, 0.4);
+        }
+
+        .control-panel {
+            width: 40%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            background: linear-gradient(45deg, #00897b, #26a69a);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(45deg, #26a69a, #4db6ac);
+            transform: translateY(-2px);
+        }
+
+        .panel-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .panel-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            background: #00897b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #26a69a;
+        }
+
+        .btn-secondary {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .btn-secondary:hover {
+            background: #888;
+        }
+
+        .occurrence-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .occurrence-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #00897b;
+        }
+
+        .occurrence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .occurrence-type {
+            background: #ff5722;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .occurrence-date {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(45deg, #00897b, #26a69a);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 0;
+            color: white;
+            max-height: calc(90vh - 80px);
+            overflow-y: auto;
+        }
+
+        /* Tabs */
+        .tab-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #4fc3f7;
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .contact-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .contact-section h3 {
+            color: #4fc3f7;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128c7e;
+            transform: scale(1.05);
+        }
+
+        /* Risk Bar */
+        .risk-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .risk-bar-container {
+            margin-top: 10px;
+        }
+
+        .risk-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+            position: relative;
+        }
+
+        .risk-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .risk-low { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+        .risk-medium { background: linear-gradient(90deg, #ff9800, #ffc107); }
+        .risk-high { background: linear-gradient(90deg, #f44336, #e91e63); }
+
+        /* Schedule Styles */
+        .schedule-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .current-guard {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .next-guard {
+            background: rgba(255, 152, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .schedule-toggle {
+            background: transparent;
+            border: 1px solid #4fc3f7;
+            color: #4fc3f7;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-toggle:hover {
+            background: #4fc3f7;
+            color: white;
+        }
+
+        .schedule-details {
+            display: none;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .schedule-day {
+            margin-bottom: 10px;
+        }
+
+        .schedule-day h4 {
+            color: #4fc3f7;
+            margin-bottom: 5px;
+        }
+
+        /* Cluster Styles */
+        .marker-cluster-small {
+            background-color: rgba(181, 226, 140, 0.6);
+        }
+        .marker-cluster-small div {
+            background-color: rgba(110, 204, 57, 0.6);
+        }
+
+        .marker-cluster-medium {
+            background-color: rgba(241, 211, 87, 0.6);
+        }
+        .marker-cluster-medium div {
+            background-color: rgba(240, 194, 12, 0.6);
+        }
+
+        .marker-cluster-large {
+            background-color: rgba(253, 156, 115, 0.6);
+        }
+        .marker-cluster-large div {
+            background-color: rgba(241, 128, 23, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .map-container {
+                flex-direction: column;
+            }
+            
+            #map {
+                width: 100%;
+                height: 50%;
+            }
+            
+            .control-panel {
+                width: 100%;
+                height: 50%;
+            }
+            
+            .control-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+        }
+
+                /* ... Seu CSS existente ... */
+
+        .whatsapp-link {
+            background: #25d366; /* Cor verde do WhatsApp */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex; /* Para alinhar o ícone e o texto */
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            margin-left: 10px; /* Para separar um pouco do texto "Operações:" */
+        }
+
+        .whatsapp-link:hover {
+            background: #128c7e; /* Verde mais escuro no hover */
+            transform: scale(1.03);
+        }
+
+        .whatsapp-contact-item {
+            display: flex; /* Para alinhar o "strong" e o link na mesma linha */
+            align-items: center;
+            margin-bottom: 8px; /* Espaçamento entre os itens */
+        }
+        
+        .whatsapp-contact-item strong {
+            min-width: 120px; /* Ajuda a alinhar o conteúdo, ajuste se necessário */
+        }
+
+       
+    </style>
+</head>
+<body>
+    <button id="toggleSidebar" class="menu-button" aria-label="Abrir ou fechar menu">☰</button>
+
+    <div id="sidebar" class="sidebar hidden">
+        <div class="region-legend">
+            <h3>Legenda por Região</h3>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e53e3e;"></div>
+                <span>Norte</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3182ce;"></div>
+                <span>Nordeste</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #38a169;"></div>
+                <span>Centro-Oeste</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #d69e2e;"></div>
+                <span>Sudeste</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #805ad5;"></div>
+                <span>Sul</span>
+            </div>
+        </div>
+
+        <div id="statesList"></div>
+    </div>
+
+    <div id="main">
+        <header>
+            <h1>HELEXIA UFV SECURITY MONITORING - MOVISAFE AMLAT</h1>
+            <input type="text" class="search-bar" placeholder="Pesquisar localização..." aria-label="Pesquisar localização">
+        </header>
+        
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <div class="control-panel">
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="showPanel('register')">
+                        <i class="fas fa-plus-circle"></i>
+                        Registrar Ocorrência
+                    </button>
+                    <button class="control-btn" onclick="showPanel('consult')">
+                        <i class="fas fa-search"></i>
+                        Consultar Ocorrências
+                    </button>
+                            <!-- Novo Botão para Planilha de Controle -->
+        <a href="https://docs.google.com/spreadsheets/d/1IVd_1hF6-z3Wr-TywlM2tVSmg4ewhJyl-D9RAqs2cn4/edit?usp=sharing"  
+   class="control-btn" 
+   target="_blank" 
+   rel="noopener noreferrer">
+    <i class="fas fa-file-excel"></i>
+    Monit. UFV Câmeras
+</a>
+
+          </a>
+        <!-- NOVO BOTÃO PARA FORMULÁRIO DE PASSAGEM DE PLANTÃO -->
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSczqFqzbKwPkYT8AQcqlcrIiAmoo0dIkpfIlZKzobkMHZuONA/viewform?usp=dialog"  
+   class="control-btn" 
+   target="_blank" 
+   rel="noopener noreferrer">
+    <i class="fas fa-clipboard-list"></i> <!-- Ícone de lista/formulário -->
+    Passagem de Plantão
+</a>
+        <!-- FIM DO NOVO BOTÃO -->
+
+        <!-- Novo Botão para Telefones Úteis -->
+        <button class="control-btn" onclick="showPanel('useful-phones')">
+            <i class="fas fa-phone-square-alt"></i>
+            Telefones Úteis
+        </button>
+        
+                </div>
+
+                <!-- Painel de Registro -->
+                <div id="register-panel" class="panel-content">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Registro de Ocorrência</h3>
+                    <form id="occurrenceForm">
+                        <div class="form-group">
+                            <label for="location">Localização:</label>
+                            <select id="location" required>
+                                <option value="">Selecione a localização</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Modalidade:</label>
+                            <select id="type" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="Roubo">Roubo</option>
+                                <option value="Furto">Furto</option>
+                                <option value="Vandalismo">Vandalismo</option>
+                                <option value="Invasão">Invasão</option>
+                                <option value="Incêndio">Incêndio</option>
+                                <option value="Acidente">Acidente</option>
+                                <option value="Outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Data:</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Horário:</label>
+                            <input type="time" id="time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="names">Nomes Envolvidos:</label>
+                            <input type="text" id="names" placeholder="Nome dos envolvidos">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Descrição:</label>
+                            <textarea id="description" placeholder="Descreva detalhadamente a ocorrência" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="reporter">Responsável pelo Registro:</label>
+                            <input type="text" id="reporter" placeholder="Nome do responsável" required>
+                        </div>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> Registrar Ocorrência
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Painel de Consulta -->
+                <div id="consult-panel" class="panel-content">
+                    <h3><i class="fas fa-list"></i> Consultar Ocorrências</h3>
+                    <div class="control-buttons">
+                        <button class="btn-secondary" onclick="viewOccurrences()">
+                            <i class="fas fa-eye"></i> Ver Todas
+                        </button>
+                        <button class="btn-secondary" onclick="exportPDF()">
+                            <i class="fas fa-file-pdf"></i> Exportar PDF
+                        </button>
+                    </div>
+                    <div id="occurrencesList" class="occurrence-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Painel de Telefones Úteis -->
+       <!-- Painel de Telefones Úteis -->
+    <div id="useful-phones-panel" class="panel-content">
+        <div class="panel-header-with-close">
+            <h3><i class="fas fa-phone-volume"></i> Telefones Úteis</h3>
+            <span class="close-panel-button" onclick="hideAllControlPanels()">&times;</span>
+        </div>
+        
+        <p style="margin-bottom: 15px; color: #ccc;">Aqui você pode encontrar contatos importantes para diversas situações.</p>
+        
+        <div class="form-group">
+            <label>Emergência Geral (Chamada Direta):</label>
+            <p><strong>190</strong> (Polícia Militar)</p>
+            <p><strong>193</strong> (Corpo de Bombeiros)</p>
+            <p><strong>192</strong> (SAMU)</p>
+        </div>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Contato Interno - MOVISAFE:</label>
+            <p class="whatsapp-contact-item">
+                <strong>CRI 24hrs:</strong> 
+                <a href="https://wa.me/5521996601002"  class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> +55 (21) 99660-1002 
+                </a>
+            </p>
+            <p class="whatsapp-contact-item">
+                <strong> Romario Peres - Ger.Operações:</strong> 
+                <a href="https://wa.me/5521992424412"  class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> +55 (21) 99242-4412 
+                </a>
+            </p>
+            <p class="whatsapp-contact-item">
+                <strong>Gaspar - Suporte Técnico Remoto:</strong> 
+                <a href="https://wa.me/5521972628587"  class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> +55 (21) 97262-8587 
+                </a>
+            </p>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <label>Outros Contatos Úteis:</label>
+            <p class="whatsapp-contact-item">
+                <strong>Gilberson Lima - Seg.Pat.(GTY):</strong> 
+                <a href="https://wa.me/5512974013088"  class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> +55 (12) 97401-3088 
+                </a>
+            </p>
+           
+            <!-- Adicione mais contatos aqui seguindo o mesmo padrão -->
+        </div>
+    </div>
+
+    <!-- Modal para informações da UFV -->
+    <div id="ufvModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Informações da UFV</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="tab-container">
+                    <button class="tab-button active" onclick="showTab('contacts')">
+                        <i class="fas fa-phone"></i> Contatos
+                    </button>
+                    <button class="tab-button" onclick="showTab('security')">
+                        <i class="fas fa-shield-alt"></i> Segurança GTY
+                    </button>
+                    <button class="tab-button" onclick="showTab('info')">
+                        <i class="fas fa-info-circle"></i> Informações
+                    </button>
+                </div>
+                
+                <div id="contacts-tab" class="tab-content active">
+                    <!-- Conteúdo será inserido dinamicamente -->
+                </div>
+                
+                <div id="security-tab" class="tab-content">
+                    <!-- Conteúdo será inserido dinamicamente -->
+                </div>
+                
+                <div id="info-tab" class="tab-content">
+                    <!-- Conteúdo será inserido dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // Dados das localizações organizados por região
+        const locations = {
+            "Norte": {
+                "AM": [
+                    { 
+                        code: "HAC09", 
+                        name: "Açaí 09", 
+                        city: "Presidente Figueiredo", 
+                        lat: -1.936674, 
+                        lng: -60.046947, 
+                        distributor: "AME",
+                        hasGTY: false,
+                        security: {
+                            direct: "7ª CIPM SIM +5592988421606",
+                            police: "Polícia Militar: Av. General Rodrigo Octavio, 3000 - Coroado I, Manaus - AM, 69080-900, tel (92) 3654-1234",
+                            fire: "Bombeiros: Av. Mário Ypiranga, 1695 - Adrianópolis, Manaus - AM, 69057-002, tel (92) 3198-3300",
+                            city_hall: "Prefeitura: Av. Brasil, 2971 - Compensa, Manaus - AM, 69036-110, tel (92) 3625-6000"
+                        }
+                    }
+                ],
+                "RO": [
+                    { 
+                        code: "HRM01", 
+                        name: "Rolim de Moura 01", 
+                        city: "Rolim de Moura", 
+                        lat: -11.692798, 
+                        lng: -61.778063, 
+                        distributor: "ERO",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5569999123456",
+                            police: "Polícia Militar: R. Corumbiara, 4707 - Centro, Rolim de Moura - RO, 78987-000, tel (69) 3442-1319",
+                            fire: "Bombeiros: Av. Goiânia, 5440 - Centro, Rolim de Moura - RO, 76940-000, tel (69) 3442-3193",
+                            city_hall: "Prefeitura: Av. 25 de Agosto, 3055 - Centro, Rolim de Moura - RO, 76940-000, tel (69) 3442-5122"
+                        }
+                    }
+                ]
+            },
+            "Nordeste": {
+                "CE": [
+                    { 
+                        code: "HCT01", 
+                        name: "Caatinga 01", 
+                        city: "Beberibe", 
+                        lat: -4.195692, 
+                        lng: -38.171492, 
+                        distributor: "ENEL CE",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5585997690224 Batalhão de Rondas de Ações Intensivas e Ostensivas.",
+                            police: "Polícia Militar: R. Joaquim Facó, 370 - Beberibe, CE, 62840-000, tel (85) 3338-1190",
+                            fire: "Bombeiros: Av. Dom Luís, 1200 - Meireles, Fortaleza - CE, 60160-230, tel (85) 3101-2018",
+                            city_hall: "Prefeitura: R. Monsenhor Dourado, 598 - Centro, Beberibe, CE, 62840-000, tel (85) 3338-1293"
+                        }
+                    },
+                    { 
+                        code: "HCT02", 
+                        name: "Caatinga 02", 
+                        city: "Cascavel", 
+                        lat: -4.120416, 
+                        lng: -38.286931, 
+                        distributor: "ENEL CE",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5585997690224 Batalhão de Rondas de Ações Intensivas e Ostensivas",
+                            police: "Polícia Militar: Estr. Mata Quiri Cascavel, 3190 - Cascavel, CE, 62850-000, tel (85) 3334-1172",
+                            fire: "Bombeiros: R. Padre Pedro de Alencar, 1091 - Messejana, Fortaleza - CE, 60180-410, tel (85) 3101-2018",
+                            city_hall: "Prefeitura: R. Bia Coelho, 2205 - Centro, Cascavel, CE, 62850-000, tel (85) 3334-1475"
+                        }
+                    },
+                    { 
+                        code: "HCT15", 
+                        name: "Caatinga 15", 
+                        city: "Jaguaruana", 
+                        lat: -4.819453, 
+                        lng: -37.885483, 
+                        distributor: "ENEL CE",
+                        hasGTY: false,
+                        security: {
+                            direct: "Delegacia Policia Militar Jaguaruana +5588992222624",
+                            police: "Polícia Militar: Rua José Cláudio de Melo, s/n - Centro, tel (88) 3418-1370",
+                            fire: "Bombeiros: R. Padre Pedro de Alencar, 1091 - Messejana, Fortaleza - CE, 60180-410, tel (85) 3101-2018",
+                            city_hall: "Prefeitura: Av. José Marrocos, 456 - Centro, Jaguaruana, CE, 62823-000, tel (88) 3418-1388"
+                        }
+                    },
+                    { 
+                        code: "HCT23", 
+                        name: "Caatinga 23", 
+                        city: "Beberibe", 
+                        lat: -4.25466, 
+                        lng: -38.081623, 
+                        distributor: "ENEL CE",
+                        hasGTY: false,
+                        security: {
+                            direct: "Batalhão de Rondas de Ações Intensivas e Ostensivas +5585997690224",
+                            police: "Polícia Militar: R. Joaquim Facó, 370 - Beberibe, CE, 62840-000, tel (85) 3338-1190",
+                            fire: "Bombeiros: Av. Dom Luís, 1200 - Meireles, Fortaleza - CE, 60160-230, tel (85) 3101-2018",
+                            city_hall: "Prefeitura: R. Monsenhor Dourado, 598 - Centro, Beberibe, CE, 62840-000, tel (85) 3338-1293"
+                        }
+                    }
+                ],
+                "RN": [
+                    { 
+                        code: "HPP01", 
+                        name: "Pipa 01", 
+                        city: "Governador Dix-Sept Rosado", 
+                        lat: -5.5, 
+                        lng: -37.490874, 
+                        distributor: "COSERN",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5584999123460",
+                            police: "Polícia Militar: Avenida Aldemir Fernandes, 147, Bairro Aeroporto, Mossoró - RN, CEP: 59607-150, tel (84) 3315-5601",
+                            fire: "Bombeiros: Rua Felipe Camarão, 149, Aeroporto, Mossoró - RN, CEP: 59607-340, tel (84) 3315-5050",
+                            city_hall: "Prefeitura: Rua José Fernandes, 135, Centro, Governador Dix-Sept Rosado - RN, CEP: 59790-000, tel (84) 3320-0135"
+                        }
+                    },
+                    { 
+                        code: "HPP12", 
+                        name: "Pipa 12", 
+                        city: "Governador Dix-Sept Rosado", 
+                        lat: -5.499358, 
+                        lng: -37.492462, 
+                        distributor: "COSERN",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5584999123461",
+                            police: "Polícia Militar: Avenida Aldemir Fernandes, 147, Bairro Aeroporto, Mossoró - RN, CEP: 59607-150, tel (84) 3315-5601",
+                            fire: "Bombeiros: Rua Felipe Camarão, 149, Aeroporto, Mossoró - RN, CEP: 59607-340, tel (84) 3315-5050",
+                            city_hall: "Prefeitura: Rua José Fernandes, 135, Centro, Governador Dix-Sept Rosado - RN, CEP: 59790-000, tel (84) 3320-0135"
+                        }
+                    }
+                ]
+            },
+            "Centro-Oeste": {
+                "GO": [
+                    { 
+                        code: "HBV01", 
+                        name: "Bela Vista 01", 
+                        city: "Bela Vista de Goiás", 
+                        lat: -16.986862, 
+                        lng: -48.902698, 
+                        distributor: "EQUATORIAL GO",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5562999123462",
+                            police: "Polícia Militar: Av. Anhanguera, 7364 - Setor Oeste, Goiânia - GO, 74110-010, tel (62) 3201-1190",
+                            fire: "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+                            city_hall: "Prefeitura: Av. Goiás, 245 - Centro, Bela Vista de Goiás - GO, 72990-000, tel (62) 3378-1122"
+                        }
+                    },
+                    { 
+                        code: "HPQ11", 
+                        name: "Pequi 11", 
+                        city: "Guapó", 
+                        lat: -16.852294, 
+                        lng: -49.558643, 
+                        distributor: "EQUATORIAL GO",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5562999123463",
+                            police: "Polícia Militar: R. Rodolfo Taváres - Centro, Guapó - GO, 75350-000, tel (62) 3552-1190",
+                            fire: "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+                            city_hall: "Prefeitura: Rua P-2, Quadra 11, Lote 01, Setor Primavera, Guapó - GO, CEP: 75350-000, tel (62) 3552-1122"
+                        }
+                    },
+                    { 
+                        code: "HPQ21", 
+                        name: "Pequi 21", 
+                        city: "Cezarina", 
+                        lat: -17.055572, 
+                        lng: -49.760838, 
+                        distributor: "EQUATORIAL GO",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5562999123464",
+                            police: "Polícia Militar: R. Rui Barbosa, Cezarina - GO, 76195-000, tel (64) 3543-1190",
+                            fire: "Bombeiros: Avenida Manoel Monteiro, esquina com Rua da Pecuária, Jardim Salvador, Trindade - GO, CEP: 75388-478, tel (62) 3505-1153",
+                            city_hall: "Prefeitura: Avenida Luís Cardoso de Almeida, Quadra 10, Lotes 1-5, s/n - Centro, Cezarina - GO, 76195-000, tel (64) 3543-6012"
+                        }
+                    },
+                    { 
+                        code: "HPQ61", 
+                        name: "Pequi 61", 
+                        city: "Rio Verde", 
+                        lat: -17.618267, 
+                        lng: -50.829675, 
+                        distributor: "EQUATORIAL GO",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5564999123465",
+                            police: "Polícia Militar: Av. Presidente Vargas, 3790 - Centro, Rio Verde - GO, 75901-040, tel (64) 3620-1190",
+                            fire: "Bombeiros: R. 7, 1456 - Setor Central, Rio Verde - GO, 75901-150, tel (64) 3620-3193",
+                            city_hall: "Prefeitura: Av. Presidente Vargas, 3784 - Centro, Rio Verde - GO, 75901-040, tel (64) 3620-7000"
+                        }
+                    },
+                    { 
+                        code: "HPQ71", 
+                        name: "Pequi 71", 
+                        city: "Ouro", 
+                        lat: -16.24006, 
+                        lng: -49.184972, 
+                        distributor: "EQUATORIAL GO",
+                        hasGTY: false,
+                        security: {
+                            direct: "POLICIA MILITAR +5562999724763",
+                            police: "Polícia Militar: Av. Anhanguera, 7364 - Setor Oeste, Goiânia - GO, 74110-010, tel (62) 3201-1190",
+                            fire: "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+                            city_hall: "Prefeitura: Praça da Matriz, s/n - Centro, Ouro - GO, 76275-000, tel (62) 3374-1122"
+                        }
+                    }
+                ],
+                "MS": [
+                    { 
+                        code: "HBB01", 
+                        name: "Barro Branco", 
+                        city: "Paranaíba", 
+                        lat: -19.676647, 
+                        lng: -51.292041, 
+                        distributor: "EMS",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5567999123467",
+                            police: "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+                            fire: "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+                            city_hall: "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+                        }
+                    },
+                    { 
+                        code: "HBC01", 
+                        name: "Bacuri", 
+                        city: "Paranaíba", 
+                        lat: -19.474007, 
+                        lng: -51.089015, 
+                        distributor: "EMS",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5567999123468",
+                            police: "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+                            fire: "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+                            city_hall: "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+                        }
+                    },
+                    { 
+                        code: "HCS01", 
+                        name: "Cassilândia 01", 
+                        city: "Cassilândia", 
+                        lat: -19.126598, 
+                        lng: -51.70552, 
+                        distributor: "EMS",
+                        hasGTY: false,
+                        security: {
+                            direct: "+55673596-1344 Polícia Militar SIM",
+                            police: "Polícia Militar: R. Vicente de Andrade Vasconcelos, 51, Cassilândia - MS, 79540-000, tel (67) 3596-1366",
+                            fire: "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1094",
+                            city_hall: "Prefeitura: Rua Pedro Pereira de Almeida, 391 - Centro, Cassilândia - MS, 79540-000, tel (67) 3596-1133"
+                        }
+                    },
+                    { 
+                        code: "HPA01", 
+                        name: "Paraíso das Águas", 
+                        city: "Paraíso das Águas", 
+                        lat: -19.337739, 
+                        lng: -53.376867, 
+                        distributor: "EMS",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5567999123470",
+                            police: "Polícia Militar: R. Epaminondas Nogueira de Camargo, Paraíso das Águas - MS, 79550-000, tel (67) 3248-1141",
+                            fire: "Bombeiros: Rua Ambrosina Paes Coelho, 717, Centro, Costa Rica - MS, tel (67) 3247-1133",
+                            city_hall: "Prefeitura: Av. José Ferreira da Costa, 2222 - Vila Santana, Costa Rica - MS, 79550-000, tel (67) 3247-6600"
+                        }
+                    },
+                    { 
+                        code: "HPN01", 
+                        name: "Paranaiba 01", 
+                        city: "Paranaíba", 
+                        lat: -19.71705, 
+                        lng: -51.174996, 
+                        distributor: "EMS",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5567999123471",
+                            police: "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+                                                       fire: "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+                            city_hall: "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+                        }
+                    }
+                ]
+            },
+            "Sudeste": {
+                "SP": [
+                    { 
+                        code: "HEC01", 
+                        name: "Euclides da Cunha 01", 
+                        city: "Euclides da Cunha Paulista", 
+                        lat: -22.518875, 
+                        lng: -52.651715, 
+                        distributor: "ELEKTRO SP",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM SP +551135773190472",
+                            police: "Polícia Militar: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-1190",
+                            fire: "Bombeiros: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-3193",
+                            city_hall: "Prefeitura: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-1122"
+                        }
+                    },
+                    { 
+                        code: "HPH03", 
+                        name: "Pinheiros 03", 
+                        city: "Presidente Alves", 
+                        lat: -22.129531, 
+                        lng: -49.47589, 
+                        distributor: "CPFL PTA",
+                        hasGTY: false,
+                        security: {
+                            direct: "+551135773190",
+                            police: "Polícia Militar: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-1190",
+                            fire: "Bombeiros: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-3193",
+                            city_hall: "Prefeitura: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-1122"
+                        }
+                    },
+                    { 
+                        code: "HPH07", 
+                        name: "Pinheiros 07", 
+                        city: "Guararapes", 
+                        lat: -21.233206, 
+                        lng: -50.666397, 
+                        distributor: "CPFL PTA",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM SP +551135773190",
+                            police: "Polícia Militar: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-1190",
+                            fire: "Bombeiros: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-3193",
+                            city_hall: "Prefeitura: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-1122"
+                        }
+                    },
+                    { 
+                        code: "HPH81", 
+                        name: "Pinheiros 81", 
+                        city: "Barretos", 
+                        lat: -20.541574, 
+                        lng: -48.535947, 
+                        distributor: "CPFL PTA",
+                        hasGTY: true,
+                        security: {
+                            direct: "Renato Ramos +5521967637498",
+                            police: "COPOM SP (11)3577-3190 Polícia Militar: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-1190",
+                            fire: "Bombeiros: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-3193",
+                            city_hall: "Prefeitura: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Ulisses (07h às 19h)",
+                                night: "Gabriel (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Douglas (07h às 19h)",
+                                night: "Evandro (19h às 07h)"
+                            }
+                        }
+                    },
+                    { 
+                        code: "HPV01", 
+                        name: "Presidente Venceslau 01", 
+                        city: "Presidente Venceslau", 
+                        lat: -21.912207, 
+                        lng: -51.850668, 
+                        distributor: "ESS",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM SP +551135773190",
+                            police: "Polícia Militar: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-1190",
+                            fire: "Bombeiros: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-3193",
+                            city_hall: "Prefeitura: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-1122"
+                        }
+                    },
+                    { 
+                        code: "HSM03", 
+                        name: "Serra do Mar 03", 
+                        city: "Lorena", 
+                        lat: -22.711662, 
+                        lng: -45.156632, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "COPOM +551135773190",
+                            police: "Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+                            fire: "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+                            city_hall: "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+                        }
+                    },
+                    { 
+                        code: "HSM04", 
+                        name: "Serra do Mar 04", 
+                        city: "Cruzeiro", 
+                        lat: -22.59713, 
+                        lng: -44.991062, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "Washington Bruno +5512981840086", 
+                            police: "COPOM tel (011) 3577-3190, Polícia Militar: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-1190",
+                            fire: "Bombeiros: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-3193",
+                            city_hall: "Prefeitura: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-1122"
+                        }
+                    },
+                    { 
+                        code: "HSM06", 
+                        name: "Serra do Mar 06", 
+                        city: "Caçapava", 
+                        lat: -23.021502, 
+                        lng: -45.719168, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "Tiago Augusto +5511938003045",
+                            police: "COPOM tel (011) 3577-3190 Polícia Militar: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1190",
+                            fire: "Bombeiros: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-3193",
+                            city_hall: "Prefeitura: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Raynan (07h às 19h)",
+                                night: "Kevin (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Guigelson (07h às 19h)",
+                                night: "Agnaldo (19h às 07h)"
+                            }
+                        }
+                    },
+                    { 
+                        code: "HSM07", 
+                        name: "Serra do Mar 07", 
+                        city: "Lorena", 
+                        lat: -22.747953, 
+                        lng: -45.082838, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "Washington Bruno +5512981840086",
+                            police: "COPOM tel (011) 3577-3190 Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+                            fire: "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+                            city_hall: "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+                        }
+                    },
+                    { 
+                        code: "HSM12", 
+                        name: "Serra do Mar 12", 
+                        city: "Lorena", 
+                        lat: -22.737508, 
+                        lng: -45.057994, 
+                        distributor: "EDP SP",
+                        hasGTY: false,
+                        security: {
+                            direct: "Washington Bruno +5512981840086",
+                            police: "COPOM tel (011) 3577-3190 Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+                            fire: "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+                            city_hall: "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+                        }
+                    },
+                    { 
+                        code: "HSM13", 
+                        name: "Serra do Mar 13", 
+                        city: "Caçapava", 
+                        lat: -23.0387, 
+                        lng: -45.723366, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "COPOM tel (011) 3577-3190",
+                            police: "Polícia Militar: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1190",
+                            fire: "Bombeiros: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-3193",
+                            city_hall: "Prefeitura: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Donizete (07h às 19h)",
+                                night: "Sílvio (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Felipe (07h às 19h)",
+                                night: "Alexandre (19h às 07h)"
+                            }
+                        }
+                    },
+                    { 
+                        code: "HTQ01", 
+                        name: "Taquarituba 01", 
+                        city: "Taquarituba", 
+                        lat: -23.502261, 
+                        lng: -49.277648, 
+                        distributor: "CPFL JAGUARI /STA CRUZ",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5514999123483",
+                            police: "Polícia Militar: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-1190",
+                            fire: "Bombeiros: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-3193",
+                            city_hall: "Prefeitura: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-1122"
+                        }
+                    },
+                    { 
+                        code: "H12C01", 
+                        name: "12 Canas", 
+                        city: "Canas", 
+                        lat: -22.7067, 
+                        lng: -45.0581, 
+                        distributor: "EDP SP",
+                        hasGTY: true,
+                        security: {
+                            direct: "+5512981840086",
+                            police: "Polícia Militar: R. José Bento, 123 - Centro, Canas - SP, 12615-000, tel (12) 3154-1190",
+                            fire: "Bombeiros: R. José Bento, 123 - Centro, Canas - SP, 12615-000, tel (12) 3154-3193",
+                            city_hall: "Prefeitura: Estrada sem nome, Canas - SP, 12615-000, tel (12) 3154-1122"
+                        }
+                    }
+                ]
+            },
+            "Sul": {
+                "PR": [
+                    { 
+                        code: "HAP01", 
+                        name: "Alto Paraná 01", 
+                        city: "Alto Paraná", 
+                        lat: -23.150601, 
+                        lng: -52.342593, 
+                        distributor: "COPEL",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM PR (41) 3320-2830",
+                            police: "Polícia Militar: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-1190",
+                            fire: "Bombeiros: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-3193",
+                            city_hall: "Prefeitura: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-1122"
+                        }
+                    },
+                    { 
+                        code: "HCG01", 
+                        name: "Cidade Gaucha 01", 
+                        city: "Cidade Gaúcha", 
+                        lat: -23.41369, 
+                        lng: -52.950997, 
+                        distributor: "COPEL",
+                        hasGTY: false,
+                        security: {
+                            direct: "+5544999930057 Destacamento Cidade Gaúcha",
+                            police: "COPOM PR (41) 3320-2830 Polícia Militar: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-1190",
+                            fire: "Bombeiros: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-3193",
+                                                        city_hall: "Prefeitura: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-1122"
+                        }
+                    },
+                    { 
+                        code: "HIG01", 
+                        name: "Iguaraçu", 
+                        city: "Iguaraçu", 
+                        lat: -23.208201, 
+                        lng: -51.778229, 
+                        distributor: "COPEL",
+                        hasGTY: true,
+                        security: {
+                            direct: "Tiago Augusto +5511938003045",
+                            police: "COPOM PR (41) 3320-2830 Polícia Militar: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-1190",
+                            fire: "Bombeiros: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-3193",
+                            city_hall: "Prefeitura: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Marcos (07h às 19h)",
+                                night: "Paulo (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Edvaldo (07h às 19h)",
+                                night: "Augusto (19h às 07h)"
+                            }
+                        }
+                    },
+                    { 
+                        code: "HLO01", 
+                        name: "Loanda 01", 
+                        city: "Loanda", 
+                        lat: -22.937484, 
+                        lng: -53.109985, 
+                        distributor: "COPEL",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM PR +554133202830",
+                            police: "Polícia Militar: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1190",
+                            fire: "Bombeiros: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-3193",
+                            city_hall: "Prefeitura: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1122"
+                        }
+                    },
+                    { 
+                        code: "HLO02", 
+                        name: "Loanda 02", 
+                        city: "Loanda", 
+                        lat: -22.937484, 
+                        lng: -53.109985, 
+                        distributor: "COPEL",
+                        hasGTY: false,
+                        security: {
+                            direct: "COPOM PR +554133202830",
+                            police: "Polícia Militar: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1190",
+                            fire: "Bombeiros: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-3193",
+                            city_hall: "Prefeitura: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1122"
+                        }
+                    },
+                    { 
+                        code: "HMM01", 
+                        name: "Munhoz de Melo", 
+                        city: "Munhoz de Melo", 
+                        lat: -23.211234, 
+                        lng: -51.756532, 
+                        distributor: "COPEL",
+                        hasGTY: true,
+                        security: {
+                            direct: "Filipe Cândido +554499382650",
+                            police: "COPOM PR (41) 33220-830 Polícia Militar: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-1190",
+                            fire: "Bombeiros: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-3193",
+                            city_hall: "Prefeitura: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Lucas (07h às 19h)",
+                                night: "Josival (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Michelangelo (07h às 19h)",
+                                night: "Valmir (19h às 07h)"
+                            }
+                        }
+                    },
+                    { 
+                        code: "HNE01", 
+                        name: "Nova Esperança", 
+                        city: "Nova Esperança", 
+                        lat: -23.21195, 
+                        lng: -52.22602, 
+                        distributor: "COPEL",
+                        hasGTY: true,
+                        security: {
+                            direct: "Felipe +554498650550",
+                            police: "COPOM PR (41) 33220-830 Polícia Militar: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-1190",
+                            fire: "Bombeiros: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-3193",
+                            city_hall: "Prefeitura: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-1122"
+                        },
+                        schedule: {
+                            even: {
+                                day: "Junior (07h às 19h)",
+                                night: "Alex (19h às 07h)"
+                            },
+                            odd: {
+                                day: "Iggor (07h às 19h)",
+                                night: "André (19h às 07h)"
+                            }
+                        }
+                    }
+                ],
+                "RS": [
+                    { 
+                        code: "HSJ01", 
+                        name: "São Jeronimo 01", 
+                        city: "São Jerônimo", 
+                        lat: -30.108649, 
+                        lng: -51.8269, 
+                        distributor: "CEEE",
+                        hasGTY: false,
+                        security: {
+                            direct: "28º BPM +555136512028",
+                            police: "Polícia Militar: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-1190",
+                            fire: "Bombeiros: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-3193",
+                            city_hall: "Prefeitura: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-1122"
+                        }
+                    }
+                ]
+            }
+        };
+
+        // Dados de risco por região (baseado em pesquisa de criminalidade)
+        const riskData = {
+            "Norte": { percentage: 75, level: "high", description: "Alto risco devido a roubos frequentes de cabos e equipamentos" },
+            "Nordeste": { percentage: 65, level: "medium", description: "Risco médio-alto com casos de vandalismo e furtos" },
+            "Centro-Oeste": { percentage: 45, level: "medium", description: "Risco moderado com ocorrências esporádicas" },
+            "Sudeste": { percentage: 35, level: "low", description: "Risco baixo-médio com boa cobertura de segurança" },
+            "Sul": { percentage: 25, level: "low", description: "Baixo risco com infraestrutura de segurança eficiente" }
+        };
+
+        // Cores por região
+        const regionColors = {
+            "Norte": "#e53e3e",
+            "Nordeste": "#3182ce",
+            "Centro-Oeste": "#38a169",
+            "Sudeste": "#d69e2e",
+            "Sul": "#805ad5"
+        };
+
+        // Variáveis globais
+        let map;
+        let markerClusters;
+        let occurrences = JSON.parse(localStorage.getItem('occurrences')) || [];
+
+        // Função para obter região de uma UFV
+        function getRegionByLocation(location) {
+            for (let region in locations) {
+                for (let state in locations[region]) {
+                    if (locations[region][state].find(loc => loc.code === location.code)) {
+                        return region;
+                    }
+                }
+            }
+            return "Sudeste"; // fallback
+        }
+
+        // Função para verificar se é dia par ou ímpar
+        function isEvenDay() {
+            return new Date().getDate() % 2 === 0;
+        }
+
+        // Função para obter responsável atual
+        function getCurrentGuard(schedule) {
+            if (!schedule) return null;
+            
+            const now = new Date();
+            const hour = now.getHours();
+            const isEven = isEvenDay();
+            
+            const dayShift = isEven ? schedule.even : schedule.odd;
+            
+            if (hour >= 7 && hour < 19) {
+                return { current: dayShift.day, next: dayShift.night, period: "Turno Diurno" };
+            } else {
+                return { current: dayShift.night, next: dayShift.day, period: "Turno Noturno" };
+            }
+        }
+
+        // Inicializar mapa
+        function initMap() {
+    map = L.map('map', {
+        zoomControl: false
+    }).setView([-15.7942, -47.8822], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Inicializar cluster de marcadores
+            markerClusters = L.markerClusterGroup({
+                chunkedLoading: true,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                maxClusterRadius: 80,
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    let size = 'small';
+                    if (count > 10) size = 'large';
+                    else if (count > 5) size = 'medium';
+                    
+                    return L.divIcon({
+                        html: '<div><span>' + count + '</span></div>',
+                        className: 'marker-cluster marker-cluster-' + size,
+                        iconSize: L.point(40, 40)
+                    });
+                }
+            });
+
+            createMarkers();
+            map.addLayer(markerClusters);
+        }
+
+        // Criar marcadores
+        function createMarkers() {
+            Object.keys(locations).forEach(region => {
+                Object.keys(locations[region]).forEach(state => {
+                    locations[region][state].forEach(location => {
+                        const color = regionColors[region];
+                        
+                        const marker = L.circleMarker([location.lat, location.lng], {
+                            radius: 14,
+                            fillColor: color,
+                            color: '#fff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        });
+
+                        marker.bindTooltip(`${location.name} - ${location.city}`, {
+                            permanent: false,
+                            direction: 'top'
+                        });
+
+                        marker.on('click', () => showLocationModal(location));
+                        
+                        markerClusters.addLayer(marker);
+                    });
+                });
+            });
+        }
+
+        // Mostrar modal da localização
+        function showLocationModal(location) {
+            const modal = document.getElementById('ufvModal');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalTitle.textContent = `${location.name} - ${location.city}`;
+            
+            // Resetar abas
+            showTab('contacts');
+            
+            // Preencher conteúdo das abas
+            fillContactsTab(location);
+            fillSecurityTab(location);
+            fillInfoTab(location);
+            
+            modal.style.display = 'block';
+        }
+
+        // Preencher aba de contatos
+        function fillContactsTab(location) {
+            const contactsTab = document.getElementById('contacts-tab');
+            const region = getRegionByLocation(location);
+            const risk = riskData[region];
+            
+            contactsTab.innerHTML = `
+                <div class="contact-section">
+                    <h3><i class="fas fa-shield-alt"></i> Segurança Direta</h3>
+                    <div class="contact-item">
+                        <strong>Contato:</strong>
+                        <a href="https://wa.me/${location.security.direct.replace(/[^0-9]/g, '')}" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i> ${location.security.direct}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="risk-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Nível de Risco - ${region}</h3>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar">
+                            <div class="risk-bar-fill risk-${risk.level}" style="width: ${risk.percentage}%">
+                                <span class="risk-percentage">${risk.percentage}%</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 14px; color: #ccc;">${risk.description}</p>
+                    </div>
+                </div>
+
+                <div class="contact-section">
+                    <h3><i class="fas fa-phone"></i> Emergências</h3>
+                    <div class="contact-item">
+                        <strong>Polícia:</strong>
+                        <span style="font-size: 12px;">${location.security.police}</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Bombeiros:</strong>
+                        <span style="font-size: 12px;">${location.security.fire}</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Prefeitura:</strong>
+                        <span style="font-size: 12px;">${location.security.city_hall}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Preencher aba de segurança GTY
+        function fillSecurityTab(location) {
+            const securityTab = document.getElementById('security-tab');
+            
+            if (!location.hasGTY) {
+                securityTab.innerHTML = `
+                    <div class="contact-section">
+                        <h3><i class="fas fa-info-circle"></i> Segurança GTY</h3>
+                        <p>Esta UFV não possui cobertura do grupo GTY.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let scheduleContent = '';
+            if (location.schedule) {
+                const guard = getCurrentGuard(location.schedule);
+                scheduleContent = `
+                    <div class="schedule-section">
+                        <h3><i class="fas fa-clock"></i> Escala Atual</h3>
+                        <div class="current-guard">
+                            <strong>🟢 ${guard.period}:</strong><br>
+                            ${guard.current}
+                        </div>
+                        <div class="next-guard">
+                            <strong>⏰ Próximo Turno:</strong><br>
+                            ${guard.next}
+                        </div>
+                        <button class="schedule-toggle" onclick="toggleScheduleDetails('${location.code}')">
+                            📅 Ver Escala Completa
+                        </button>
+                        <div id="schedule-${location.code}" class="schedule-details">
+                            <div class="schedule-day">
+                                <h4>📅 Dias Pares (${isEvenDay() ? 'HOJE' : 'AMANHÃ'})</h4>
+                                <p>☀️ ${location.schedule.even.day}</p>
+                                <p>🌙 ${location.schedule.even.night}</p>
+                            </div>
+                            <div class="schedule-day">
+                                <h4>📅 Dias Ímpares (${!isEvenDay() ? 'HOJE' : 'AMANHÃ'})</h4>
+                                <p>☀️ ${location.schedule.odd.day}</p>
+                                <p>🌙 ${location.schedule.odd.night}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            securityTab.innerHTML = `
+                <div class="contact-section">
+                    <h3><i class="fas fa-users"></i> Grupo WhatsApp GTY</h3>
+                    <div class="contact-item">
+                        <strong>Grupo:</strong>
+                        <a href="https://wa.me/5512974013088" target="_blank" class="whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i> Acessar Grupo GTY
+                        </a>
+                    </div>
+                    <p style="font-size: 12px; color: #ccc; margin-top: 10px;">
+                        Esta UFV possui cobertura da empresa de vigilância GTY com grupo dedicado no WhatsApp.
+                    </p>
+                </div>
+                ${scheduleContent}
+            `;
+        }
+
+        // Preencher aba de informações
+        function fillInfoTab(location) {
+            const infoTab = document.getElementById('info-tab');
+            
+            infoTab.innerHTML = `
+                <div class="contact-section">
+                    <h3><i class="fas fa-info-circle"></i> Informações da UFV</h3>
+                    <div class="contact-item">
+                        <strong>Código:</strong>
+                        <span>${location.code}</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Distribuidora:</strong>
+                        <span>${location.distributor}</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Coordenadas:</strong>
+                        <span>${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Localização:</strong>
+                        <span>${location.city}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Alternar detalhes da escala
+        function toggleScheduleDetails(code) {
+            const details = document.getElementById(`schedule-${code}`);
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+            }
+        }
+
+        // Mostrar aba
+        function showTab(tabName) {
+            // Remover classe active de todos os botões e conteúdos
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active ao botão e conteúdo selecionado
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // Criar sidebar
+        function createSidebar() {
+            const statesList = document.getElementById('statesList');
+            
+            Object.keys(locations).forEach(region => {
+                Object.keys(locations[region]).forEach(state => {
+                    const stateDiv = document.createElement('div');
+                    stateDiv.className = 'state-section';
+                    
+                    const stateHeader = document.createElement('div');
+                    stateHeader.className = 'state-header';
+                    stateHeader.innerHTML = `
+                        <span>${state}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    `;
+                    
+                    const citiesDiv = document.createElement('div');
+                    citiesDiv.className = 'state-cities';
+                    
+                    locations[region][state].forEach(location => {
+                        const cityLink = document.createElement('a');
+                        cityLink.href = '#';
+                        cityLink.textContent = `${location.name} - ${location.city}`;
+                        cityLink.onclick = (e) => {
+                            e.preventDefault();
+                            map.setView([location.lat, location.lng], 13);
+                            showLocationModal(location);
+                        };
+                        citiesDiv.appendChild(cityLink);
+                    });
+                    
+                    stateHeader.onclick = () => {
+                        citiesDiv.classList.toggle('expanded');
+                        const icon = stateHeader.querySelector('i');
+                        icon.classList.toggle('fa-chevron-down');
+                        icon.classList.toggle('fa-chevron-up');
+                    };
+                    
+                    stateDiv.appendChild(stateHeader);
+                    stateDiv.appendChild(citiesDiv);
+                    statesList.appendChild(stateDiv);
+                });
+            });
+        }
+
+        // Função para popular select de localização
+        function populateLocationSelect() {
+            const locationSelect = document.getElementById('location');
+            locationSelect.innerHTML = '<option value="">Selecione a localização</option>';
+            
+            Object.keys(locations).forEach(region => {
+                Object.keys(locations[region]).forEach(state => {
+                    locations[region][state].forEach(location => {
+                        const option = document.createElement('option');
+                        option.value = location.code;
+                        option.textContent = `${location.name} - ${location.city}`;
+                        locationSelect.appendChild(option);
+                    });
+                });
+            });
+        }
+
+        // Função para mostrar painel
+        function showPanel(panelType) {
+            document.querySelectorAll('.panel-content').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`${panelType}-panel`).classList.add('active');
+        }
+
+        // Função para registrar ocorrência
+        function registerOccurrence(event) {
+            event.preventDefault();
+            
+            const formData = {
+                id: Date.now(),
+                location: document.getElementById('location').value,
+                type: document.getElementById('type').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                names: document.getElementById('names').value,
+                description: document.getElementById('description').value,
+                reporter: document.getElementById('reporter').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            occurrences.push(formData);
+            localStorage.setItem('occurrences', JSON.stringify(occurrences));
+            
+            alert('Ocorrência registrada com sucesso!');
+            document.getElementById('occurrenceForm').reset();
+            
+            // Atualizar lista de ocorrências se estiver visível
+            if (document.getElementById('consult-panel').classList.contains('active')) {
+                viewOccurrences();
+            }
+        }
+
+        // Função para visualizar ocorrências
+        function viewOccurrences() {
+            const occurrencesList = document.getElementById('occurrencesList');
+            occurrencesList.innerHTML = '';
+            
+            if (occurrences.length === 0) {
+                occurrencesList.innerHTML = '<p>Nenhuma ocorrência registrada.</p>';
+                return;
+            }
+            
+            occurrences.forEach((occurrence, index) => {
+                const locationName = getLocationName(occurrence.location);
+                const occurrenceDiv = document.createElement('div');
+                occurrenceDiv.className = 'occurrence-item';
+                occurrenceDiv.innerHTML = `
+                    <div class="occurrence-header">
+                        <span class="occurrence-type">${occurrence.type}</span>
+                        <span class="occurrence-date">${new Date(occurrence.date).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <div><strong>Local:</strong> ${locationName}</div>
+                    <div><strong>Horário:</strong> ${occurrence.time}</div>
+                    <div><strong>Responsável:</strong> ${occurrence.reporter}</div>
+                    <div><strong>Descrição:</strong> ${occurrence.description.substring(0, 100)}${occurrence.description.length > 100 ? '...' : ''}</div>
+                    <div style="margin-top: 10px;">
+                        <button class="btn-secondary" onclick="viewOccurrenceDetails(${index})">
+                            <i class="fas fa-eye"></i> Ver Detalhes
+                        </button>
+                        <button class="btn-secondary" onclick="deleteOccurrence(${index})">
+                            <i class="fas fa-trash"></i> Excluir
+                        </button>
+                    </div>
+                `;
+                occurrencesList.appendChild(occurrenceDiv);
+            });
+        }
+
+        // Função para obter nome da localização
+        function getLocationName(code) {
+            for (let region in locations) {
+                for (let state in locations[region]) {
+                    const location = locations[region][state].find(loc => loc.code === code);
+                    if (location) {
+                        return `${location.name} - ${location.city}`;
+                    }
+                }
+            }
+            return 'Localização não encontrada';
+        }
+
+        // Função para ver detalhes da ocorrência
+        function viewOccurrenceDetails(index) {
+            const occurrence = occurrences[index];
+            const locationName = getLocationName(occurrence.location);
+            
+            alert(`
+DETALHES DA OCORRÊNCIA
+
+Local: ${locationName}
+Tipo: ${occurrence.type}
+Data: ${new Date(occurrence.date).toLocaleDateString('pt-BR')}
+Horário: ${occurrence.time}
+Nomes Envolvidos: ${occurrence.names || 'Não informado'}
+Responsável: ${occurrence.reporter}
+
+Descrição:
+${occurrence.description}
+
+Registrado em: ${new Date(occurrence.timestamp).toLocaleString('pt-BR')}
+            `);
+        }
+
+        // Função para excluir ocorrência
+        function deleteOccurrence(index) {
+            if (confirm('Tem certeza que deseja excluir esta ocorrência?')) {
+                occurrences.splice(index, 1);
+                localStorage.setItem('occurrences', JSON.stringify(occurrences));
+                viewOccurrences();
+            }
+        }
+
+        // Função para exportar PDF
+        function exportPDF() {
+            if (occurrences.length === 0) {
+                alert('Nenhuma ocorrência para exportar.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Cabeçalho
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('HELEXIA PV PLANTS - RELATÓRIO DE OCORRÊNCIAS', 20, 20);
+            doc.text('MOVISAFE AMLAT', 20, 30);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 20, 40);
+            doc.text(`Total de ocorrências: ${occurrences.length}`, 20, 50);
+            
+            let yPosition = 70;
+            
+            occurrences.forEach((occurrence, index) => {
+                if (yPosition > 250) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                
+                const locationName = getLocationName(occurrence.location);
+                
+                doc.setFont(undefined, 'bold');
+                doc.text(`${index + 1}. ${occurrence.type} - ${locationName}`, 20, yPosition);
+                yPosition += 10;
+                
+                doc.setFont(undefined, 'normal');
+                doc.text(`Data: ${new Date(occurrence.date).toLocaleDateString('pt-BR')} às ${occurrence.time}`, 25, yPosition);
+                yPosition += 7;
+                
+                if (occurrence.names) {
+                    doc.text(`Envolvidos: ${occurrence.names}`, 25, yPosition);
+                    yPosition += 7;
+                }
+                
+                doc.text(`Responsável: ${occurrence.reporter}`, 25, yPosition);
+                yPosition += 7;
+                
+                // Quebrar descrição em linhas
+                const descriptionLines = doc.splitTextToSize(`Descrição: ${occurrence.description}`, 170);
+                descriptionLines.forEach(line => {
+                    if (yPosition > 280) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(line, 25, yPosition);
+                    yPosition += 7;
+                });
+                
+                doc.text(`Registrado em: ${new Date(occurrence.timestamp).toLocaleString('pt-BR')}`, 25, yPosition);
+                yPosition += 15;
+                
+                // Linha separadora
+                doc.line(20, yPosition - 5, 190, yPosition - 5);
+                yPosition += 5;
+            });
+            
+            // Rodapé
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Página ${i} de ${pageCount}`, 170, 290);
+                doc.text('MOVISAFE AMLAT - Relatório Confidencial', 20, 290);
+            }
+            
+            doc.save(`Relatorio_Ocorrencias_${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        // Funcionalidade de pesquisa
+        function searchLocation(query) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`, {
+                headers: {
+                    'User-Agent': 'MonitoramentoHelexia/1.0 (contato@exemplo.com)'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+                        map.setView([lat, lon], 13);
+                    } else {
+                        alert('Localização não encontrada. Tente novamente.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro na pesquisa:', err);
+                    alert('Ocorreu um erro ao buscar a localização. Tente novamente mais tarde.');
+                });
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            createSidebar();
+            populateLocationSelect();
+
+            // Definir data atual como padrão
+            document.getElementById('date').valueAsDate = new Date();
+
+            // Toggle sidebar
+            document.getElementById('toggleSidebar').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('hidden');
+            });
+
+            // Form submission
+            document.getElementById('occurrenceForm').addEventListener('submit', registerOccurrence);
+
+            // Modal event listeners
+            document.querySelector('.close').addEventListener('click', () => {
+                document.getElementById('ufvModal').style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('ufvModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // Search functionality
+            const searchBar = document.querySelector('.search-bar');
+            searchBar.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const query = searchBar.value.trim().toLowerCase();
+                    if (query) {
+                        let found = false;
+                        
+                        // Procurar nas localizações
+                        Object.keys(locations).forEach(region => {
+                            Object.keys(locations[region]).forEach(state => {
+                                locations[region][state].forEach(location => {
+                                    if (location.name.toLowerCase().includes(query) || 
+                                        location.city.toLowerCase().includes(query) ||
+                                        location.code.toLowerCase().includes(query)) {
+                                        map.setView([location.lat, location.lng], 13);
+                                        found = true;
+                                        return;
+                                    }
+                                });
+                            });
+                        });
+                        
+                        if (!found) {
+                            searchLocation(query);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
