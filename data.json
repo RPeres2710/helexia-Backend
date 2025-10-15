@@ -1,0 +1,704 @@
+{
+  "locations": {
+    "Norte": {
+      "AM": [
+        {
+          "code": "HAC09",
+          "name": "Açaí 09",
+          "city": "Presidente Figueiredo",
+          "lat": -1.936674,
+          "lng": -60.046947,
+          "distributor": "AME",
+          "hasGTY": false,
+          "security": {
+            "direct": "7ª CIPM SIM +5592988421606",
+            "police": "Polícia Militar: Av. General Rodrigo Octavio, 3000 - Coroado I, Manaus - AM, 69080-900, tel (92) 3654-1234",
+            "fire": "Bombeiros: Av. Mário Ypiranga, 1695 - Adrianópolis, Manaus - AM, 69057-002, tel (92) 3198-3300",
+            "city_hall": "Prefeitura: Av. Brasil, 2971 - Compensa, Manaus - AM, 69036-110, tel (92) 3625-6000"
+          }
+        }
+      ],
+      "RO": [
+        {
+          "code": "HRM01",
+          "name": "Rolim de Moura 01",
+          "city": "Rolim de Moura",
+          "lat": -11.692798,
+          "lng": -61.778063,
+          "distributor": "ERO",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5569999123456",
+            "police": "Polícia Militar: R. Corumbiara, 4707 - Centro, Rolim de Moura - RO, 78987-000, tel (69) 3442-1319",
+            "fire": "Bombeiros: Av. Goiânia, 5440 - Centro, Rolim de Moura - RO, 76940-000, tel (69) 3442-3193",
+            "city_hall": "Prefeitura: Av. 25 de Agosto, 3055 - Centro, Rolim de Moura - RO, 76940-000, tel (69) 3442-5122"
+          }
+        }
+      ]
+    },
+    "Nordeste": {
+      "CE": [
+        {
+          "code": "HCT01",
+          "name": "Caatinga 01",
+          "city": "Beberibe",
+          "lat": -4.195692,
+          "lng": -38.171492,
+          "distributor": "ENEL CE",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5585997690224 Batalhão de Rondas de Ações Intensivas e Ostensivas.",
+            "police": "Polícia Militar: R. Joaquim Facó, 370 - Beberibe, CE, 62840-000, tel (85) 3338-1190",
+            "fire": "Bombeiros: Av. Dom Luís, 1200 - Meireles, Fortaleza - CE, 60160-230, tel (85) 3101-2018",
+            "city_hall": "Prefeitura: R. Monsenhor Dourado, 598 - Centro, Beberibe, CE, 62840-000, tel (85) 3338-1293"
+          }
+        },
+        {
+          "code": "HCT02",
+          "name": "Caatinga 02",
+          "city": "Cascavel",
+          "lat": -4.120416,
+          "lng": -38.286931,
+          "distributor": "ENEL CE",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5585997690224 Batalhão de Rondas de Ações Intensivas e Ostensivas",
+            "police": "Polícia Militar: Estr. Mata Quiri Cascavel, 3190 - Cascavel, CE, 62850-000, tel (85) 3334-1172",
+            "fire": "Bombeiros: R. Padre Pedro de Alencar, 1091 - Messejana, Fortaleza - CE, 60180-410, tel (85) 3101-2018",
+            "city_hall": "Prefeitura: R. Bia Coelho, 2205 - Centro, Cascavel, CE, 62850-000, tel (85) 3334-1475"
+          }
+        },
+        {
+          "code": "HCT15",
+          "name": "Caatinga 15",
+          "city": "Jaguaruana",
+          "lat": -4.819453,
+          "lng": -37.885483,
+          "distributor": "ENEL CE",
+          "hasGTY": false,
+          "security": {
+            "direct": "Delegacia Policia Militar Jaguaruana +5588992222624",
+            "police": "Polícia Militar: Rua José Cláudio de Melo, s/n - Centro, tel (88) 3418-1370",
+            "fire": "Bombeiros: R. Padre Pedro de Alencar, 1091 - Messejana, Fortaleza - CE, 60180-410, tel (85) 3101-2018",
+            "city_hall": "Prefeitura: Av. José Marrocos, 456 - Centro, Jaguaruana, CE, 62823-000, tel (88) 3418-1388"
+          }
+        },
+        {
+          "code": "HCT23",
+          "name": "Caatinga 23",
+          "city": "Beberibe",
+          "lat": -4.25466,
+          "lng": -38.081623,
+          "distributor": "ENEL CE",
+          "hasGTY": false,
+          "security": {
+            "direct": "Batalhão de Rondas de Ações Intensivas e Ostensivas +5585997690224",
+            "police": "Polícia Militar: R. Joaquim Facó, 370 - Beberibe, CE, 62840-000, tel (85) 3338-1190",
+            "fire": "Bombeiros: Av. Dom Luís, 1200 - Meireles, Fortaleza - CE, 60160-230, tel (85) 3101-2018",
+            "city_hall": "Prefeitura: R. Monsenhor Dourado, 598 - Centro, Beberibe, CE, 62840-000, tel (85) 3338-1293"
+          }
+        }
+      ],
+      "RN": [
+        {
+          "code": "HPP01",
+          "name": "Pipa 01",
+          "city": "Governador Dix-Sept Rosado",
+          "lat": -5.5,
+          "lng": -37.490874,
+          "distributor": "COSERN",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5584999123460",
+            "police": "Polícia Militar: Avenida Aldemir Fernandes, 147, Bairro Aeroporto, Mossoró - RN, CEP: 59607-150, tel (84) 3315-5601",
+            "fire": "Bombeiros: Rua Felipe Camarão, 149, Aeroporto, Mossoró - RN, CEP: 59607-340, tel (84) 3315-5050",
+            "city_hall": "Prefeitura: Rua José Fernandes, 135, Centro, Governador Dix-Sept Rosado - RN, CEP: 59790-000, tel (84) 3320-0135"
+          }
+        },
+        {
+          "code": "HPP12",
+          "name": "Pipa 12",
+          "city": "Governador Dix-Sept Rosado",
+          "lat": -5.499358,
+          "lng": -37.492462,
+          "distributor": "COSERN",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5584999123461",
+            "police": "Polícia Militar: Avenida Aldemir Fernandes, 147, Bairro Aeroporto, Mossoró - RN, CEP: 59607-150, tel (84) 3315-5601",
+            "fire": "Bombeiros: Rua Felipe Camarão, 149, Aeroporto, Mossoró - RN, CEP: 59607-340, tel (84) 3315-5050",
+            "city_hall": "Prefeitura: Rua José Fernandes, 135, Centro, Governador Dix-Sept Rosado - RN, CEP: 59790-000, tel (84) 3320-0135"
+          }
+        }
+      ]
+    },
+    "Centro-Oeste": {
+      "GO": [
+        {
+          "code": "HBV01",
+          "name": "Bela Vista 01",
+          "city": "Bela Vista de Goiás",
+          "lat": -16.986862,
+          "lng": -48.902698,
+          "distributor": "EQUATORIAL GO",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5562999123462",
+            "police": "Polícia Militar: Av. Anhanguera, 7364 - Setor Oeste, Goiânia - GO, 74110-010, tel (62) 3201-1190",
+            "fire": "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+            "city_hall": "Prefeitura: Av. Goiás, 245 - Centro, Bela Vista de Goiás - GO, 72990-000, tel (62) 3378-1122"
+          }
+        },
+        {
+          "code": "HPQ11",
+          "name": "Pequi 11",
+          "city": "Guapó",
+          "lat": -16.852294,
+          "lng": -49.558643,
+          "distributor": "EQUATORIAL GO",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5562999123463",
+            "police": "Polícia Militar: R. Rodolfo Taváres - Centro, Guapó - GO, 75350-000, tel (62) 3552-1190",
+            "fire": "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+            "city_hall": "Prefeitura: Rua P-2, Quadra 11, Lote 01, Setor Primavera, Guapó - GO, CEP: 75350-000, tel (62) 3552-1122"
+          }
+        },
+        {
+          "code": "HPQ21",
+          "name": "Pequi 21",
+          "city": "Cezarina",
+          "lat": -17.055572,
+          "lng": -49.760838,
+          "distributor": "EQUATORIAL GO",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5562999123464",
+            "police": "Polícia Militar: R. Rui Barbosa, Cezarina - GO, 76195-000, tel (64) 3543-1190",
+            "fire": "Bombeiros: Avenida Manoel Monteiro, esquina com Rua da Pecuária, Jardim Salvador, Trindade - GO, CEP: 75388-478, tel (62) 3505-1153",
+            "city_hall": "Prefeitura: Avenida Luís Cardoso de Almeida, Quadra 10, Lotes 1-5, s/n - Centro, Cezarina - GO, 76195-000, tel (64) 3543-6012"
+          }
+        },
+        {
+          "code": "HPQ61",
+          "name": "Pequi 61",
+          "city": "Rio Verde",
+          "lat": -17.618267,
+          "lng": -50.829675,
+          "distributor": "EQUATORIAL GO",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5564999123465",
+            "police": "Polícia Militar: Av. Presidente Vargas, 3790 - Centro, Rio Verde - GO, 75901-040, tel (64) 3620-1190",
+            "fire": "Bombeiros: R. 7, 1456 - Setor Central, Rio Verde - GO, 75901-150, tel (64) 3620-3193",
+            "city_hall": "Prefeitura: Av. Presidente Vargas, 3784 - Centro, Rio Verde - GO, 75901-040, tel (64) 3620-7000"
+          }
+        },
+        {
+          "code": "HPQ71",
+          "name": "Pequi 71",
+          "city": "Ouro",
+          "lat": -16.24006,
+          "lng": -49.184972,
+          "distributor": "EQUATORIAL GO",
+          "hasGTY": false,
+          "security": {
+            "direct": "POLICIA MILITAR +5562999724763",
+            "police": "Polícia Militar: Av. Anhanguera, 7364 - Setor Oeste, Goiânia - GO, 74110-010, tel (62) 3201-1190",
+            "fire": "Bombeiros: R. da Pecuária, 90 - Santuário, Trindade - GO, 75380-000, tel (62) 3505-3369",
+            "city_hall": "Prefeitura: Praça da Matriz, s/n - Centro, Ouro - GO, 76275-000, tel (62) 3374-1122"
+          }
+        }
+      ],
+      "MS": [
+        {
+          "code": "HBB01",
+          "name": "Barro Branco",
+          "city": "Paranaíba",
+          "lat": -19.676647,
+          "lng": -51.292041,
+          "distributor": "EMS",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5567999123467",
+            "police": "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+            "fire": "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+            "city_hall": "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+          }
+        },
+        {
+          "code": "HBC01",
+          "name": "Bacuri",
+          "city": "Paranaíba",
+          "lat": -19.474007,
+          "lng": -51.089015,
+          "distributor": "EMS",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5567999123468",
+            "police": "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+            "fire": "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+            "city_hall": "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+          }
+        },
+        {
+          "code": "HCS01",
+          "name": "Cassilândia 01",
+          "city": "Cassilândia",
+          "lat": -19.126598,
+          "lng": -51.70552,
+          "distributor": "EMS",
+          "hasGTY": false,
+          "security": {
+            "direct": "+55673596-1344 Polícia Militar SIM",
+            "police": "Polícia Militar: R. Vicente de Andrade Vasconcelos, 51, Cassilândia - MS, 79540-000, tel (67) 3596-1366",
+            "fire": "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1094",
+            "city_hall": "Prefeitura: Rua Pedro Pereira de Almeida, 391 - Centro, Cassilândia - MS, 79540-000, tel (67) 3596-1133"
+          }
+        },
+        {
+          "code": "HPA01",
+          "name": "Paraíso das Águas",
+          "city": "Paraíso das Águas",
+          "lat": -19.337739,
+          "lng": -53.376867,
+          "distributor": "EMS",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5567999123470",
+            "police": "Polícia Militar: R. Epaminondas Nogueira de Camargo, Paraíso das Águas - MS, 79550-000, tel (67) 3248-1141",
+            "fire": "Bombeiros: R. Epaminondas Nogueira de Camargo, Paraíso das Águas - MS, 79550-000, tel (67) 3248-1133",
+            "city_hall": "Prefeitura: Av. José Ferreira da Costa, 2222 - Vila Santana, Costa Rica - MS, 79550-000, tel (67) 3247-6600"
+          }
+        },
+        {
+          "code": "HPN01",
+          "name": "Paranaiba 01",
+          "city": "Paranaíba",
+          "lat": -19.71705,
+          "lng": -51.174996,
+          "distributor": "EMS",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5567999123471",
+            "police": "Polícia Militar: R. José Rodrigues Ferraz, 945 - Jardim Santana, Paranaíba - MS, 79500-000, tel (67) 3503-1393",
+            "fire": "Bombeiros: R. Benedito da Palma Oliveira, 285 - Vila Santo Antonio, Paranaíba - MS, 79500-000, tel (67) 3503-1071",
+            "city_hall": "Prefeitura: Av. Durval Rodrigues Lopes, 400 - Ipê Branco, Paranaíba - MS, 79500-000, tel (67) 3558-0160"
+          }
+        }
+      ]
+    },
+    "Sudeste": {
+      "SP": [
+        {
+          "code": "HEC01",
+          "name": "Euclides da Cunha 01",
+          "city": "Euclides da Cunha Paulista",
+          "lat": -22.518875,
+          "lng": -52.651715,
+          "distributor": "ELEKTRO SP",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM SP +551135773190472",
+            "police": "Polícia Militar: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-1190",
+            "fire": "Bombeiros: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-3193",
+            "city_hall": "Prefeitura: R. Quinze de Novembro, 510 - Centro, Euclides da Cunha Paulista - SP, 19260-000, tel (18) 3281-1122"
+          }
+        },
+        {
+          "code": "HPH03",
+          "name": "Pinheiros 03",
+          "city": "Presidente Alves",
+          "lat": -22.129531,
+          "lng": -49.47589,
+          "distributor": "CPFL PTA",
+          "hasGTY": false,
+          "security": {
+            "direct": "+551135773190",
+            "police": "Polícia Militar: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-1190",
+            "fire": "Bombeiros: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-3193",
+            "city_hall": "Prefeitura: R. Antônio Ferreira da Silva, 123 - Centro, Presidente Alves - SP, 17860-000, tel (14) 3269-1122"
+          }
+        },
+        {
+          "code": "HPH07",
+          "name": "Pinheiros 07",
+          "city": "Guararapes",
+          "lat": -21.233206,
+          "lng": -50.666397,
+          "distributor": "CPFL PTA",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM SP +551135773190",
+            "police": "Polícia Militar: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-1190",
+            "fire": "Bombeiros: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-3193",
+            "city_hall": "Prefeitura: R. Sete de Setembro, 1234 - Centro, Guararapes - SP, 16700-000, tel (18) 3705-1122"
+          }
+        },
+        {
+          "code": "HPH81",
+          "name": "Pinheiros 81",
+          "city": "Barretos",
+          "lat": -20.541574,
+          "lng": -48.535947,
+          "distributor": "CPFL PTA",
+          "hasGTY": true,
+          "security": {
+            "direct": "Renato Ramos +5521967637498",
+            "police": "COPOM SP (11)3577-3190 Polícia Militar: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-1190",
+            "fire": "Bombeiros: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-3193",
+            "city_hall": "Prefeitura: Av. 9, 1234 - Centro, Barretos - SP, 14780-000, tel (17) 3323-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Ulisses (07h às 19h)",
+              "night": "Gabriel (19h às 07h)"
+            },
+            "odd": {
+              "day": "Douglas (07h às 19h)",
+              "night": "Evandro (19h às 07h)"
+            }
+          }
+        },
+        {
+          "code": "HPV01",
+          "name": "Presidente Venceslau 01",
+          "city": "Presidente Venceslau",
+          "lat": -21.912207,
+          "lng": -51.850668,
+          "distributor": "ESS",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM SP +551135773190",
+            "police": "Polícia Militar: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-1190",
+            "fire": "Bombeiros: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-3193",
+            "city_hall": "Prefeitura: R. Tiradentes, 456 - Centro, Presidente Venceslau - SP, 19400-000, tel (18) 3271-1122"
+          }
+        },
+        {
+          "code": "HSM03",
+          "name": "Serra do Mar 03",
+          "city": "Lorena",
+          "lat": -22.711662,
+          "lng": -45.156632,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "COPOM +551135773190",
+            "police": "Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+            "fire": "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+            "city_hall": "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+          }
+        },
+        {
+          "code": "HSM04",
+          "name": "Serra do Mar 04",
+          "city": "Cruzeiro",
+          "lat": -22.59713,
+          "lng": -44.991062,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "Washington Bruno +5512981840086",
+            "police": "COPOM tel (011) 3577-3190, Polícia Militar: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-1190",
+            "fire": "Bombeiros: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-3193",
+            "city_hall": "Prefeitura: R. Major Novaes, 321 - Centro, Cruzeiro - SP, 12701-000, tel (12) 3144-1122"
+          }
+        },
+        {
+          "code": "HSM06",
+          "name": "Serra do Mar 06",
+          "city": "Caçapava",
+          "lat": -23.021502,
+          "lng": -45.719168,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "Tiago Augusto +5511938003045",
+            "police": "COPOM tel (011) 3577-3190 Polícia Militar: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1190",
+            "fire": "Bombeiros: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-3193",
+            "city_hall": "Prefeitura: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Raynan (07h às 19h)",
+              "night": "Kevin (19h às 07h)"
+            },
+            "odd": {
+              "day": "Guigelson (07h às 19h)",
+              "night": "Agnaldo (19h às 07h)"
+            }
+          }
+        },
+        {
+          "code": "HSM07",
+          "name": "Serra do Mar 07",
+          "city": "Lorena",
+          "lat": -22.747953,
+          "lng": -45.082838,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "Washington Bruno +5512981840086",
+            "police": "COPOM tel (011) 3577-3190 Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+            "fire": "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+            "city_hall": "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+          }
+        },
+        {
+          "code": "HSM12",
+          "name": "Serra do Mar 12",
+          "city": "Lorena",
+          "lat": -22.737508,
+          "lng": -45.057994,
+          "distributor": "EDP SP",
+          "hasGTY": false,
+          "security": {
+            "direct": "Washington Bruno +5512981840086",
+            "police": "COPOM tel (011) 3577-3190 Polícia Militar: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1190",
+            "fire": "Bombeiros: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-3193",
+            "city_hall": "Prefeitura: R. Capitão José Lopes, 789 - Centro, Lorena - SP, 12600-000, tel (12) 3152-1122"
+          }
+        },
+        {
+          "code": "HSM13",
+          "name": "Serra do Mar 13",
+          "city": "Caçapava",
+          "lat": -23.0387,
+          "lng": -45.723366,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "COPOM tel (011) 3577-3190",
+            "police": "Polícia Militar: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1190",
+            "fire": "Bombeiros: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-3193",
+            "city_hall": "Prefeitura: R. Coronel Carlos Eugênio, 654 - Centro, Caçapava - SP, 12280-000, tel (12) 3653-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Donizete (07h às 19h)",
+              "night": "Sílvio (19h às 07h)"
+            },
+            "odd": {
+              "day": "Felipe (07h às 19h)",
+              "night": "Alexandre (19h às 07h)"
+            }
+          }
+        },
+        {
+          "code": "HTQ01",
+          "name": "Taquarituba 01",
+          "city": "Taquarituba",
+          "lat": -23.502261,
+          "lng": -49.277648,
+          "distributor": "CPFL JAGUARI /STA CRUZ",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5514999123483",
+            "police": "Polícia Militar: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-1190",
+            "fire": "Bombeiros: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-3193",
+            "city_hall": "Prefeitura: R. Prefeito Antônio Alves de Oliveira, 987 - Centro, Taquarituba - SP, 18740-000, tel (14) 3762-1122"
+          }
+        },
+        {
+          "code": "H12C01",
+          "name": "12 Canas",
+          "city": "Canas",
+          "lat": -22.7067,
+          "lng": -45.0581,
+          "distributor": "EDP SP",
+          "hasGTY": true,
+          "security": {
+            "direct": "+5512981840086",
+            "police": "Polícia Militar: R. José Bento, 123 - Centro, Canas - SP, 12615-000, tel (12) 3154-1190",
+            "fire": "Bombeiros: R. José Bento, 123 - Centro, Canas - SP, 12615-000, tel (12) 3154-3193",
+            "city_hall": "Prefeitura: R. José Bento, 123 - Centro, Canas - SP, 12615-000, tel (12) 3154-1122"
+          }
+        }
+      ]
+    },
+    "Sul": {
+      "PR": [
+        {
+          "code": "HAP01",
+          "name": "Alto Paraná 01",
+          "city": "Alto Paraná",
+          "lat": -23.150601,
+          "lng": -52.342593,
+          "distributor": "COPEL",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM PR (41) 3320-2830",
+            "police": "Polícia Militar: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-1190",
+            "fire": "Bombeiros: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-3193",
+            "city_hall": "Prefeitura: R. Paraná, 456 - Centro, Alto Paraná - PR, 87520-000, tel (44) 3482-1122"
+          }
+        },
+        {
+          "code": "HCG01",
+          "name": "Cidade Gaucha 01",
+          "city": "Cidade Gaúcha",
+          "lat": -23.41369,
+          "lng": -52.950997,
+          "distributor": "COPEL",
+          "hasGTY": false,
+          "security": {
+            "direct": "+5544999930057 Destacamento Cidade Gaúcha",
+            "police": "COPOM PR (41) 3320-2830 Polícia Militar: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-1190",
+            "fire": "Bombeiros: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-3193",
+            "city_hall": "Prefeitura: R. Tiradentes, 789 - Centro, Cidade Gaúcha - PR, 87530-000, tel (44) 3675-1122"
+          }
+        },
+        {
+          "code": "HIG01",
+          "name": "Iguaraçu",
+          "city": "Iguaraçu",
+          "lat": -23.208201,
+          "lng": -51.778229,
+          "distributor": "COPEL",
+          "hasGTY": true,
+          "security": {
+            "direct": "Tiago Augusto +5511938003045",
+            "police": "COPOM PR (41) 3320-2830 Polícia Militar: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-1190",
+            "fire": "Bombeiros: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-3193",
+            "city_hall": "Prefeitura: R. Getúlio Vargas, 321 - Centro, Iguaraçu - PR, 86960-000, tel (43) 3472-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Marcos (07h às 19h)",
+              "night": "Paulo (19h às 07h)"
+            },
+            "odd": {
+              "day": "Edvaldo (07h às 19h)",
+              "night": "Augusto (19h às 07h)"
+            }
+          }
+        },
+        {
+          "code": "HLO01",
+          "name": "Loanda 01",
+          "city": "Loanda",
+          "lat": -22.937484,
+          "lng": -53.109985,
+          "distributor": "COPEL",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM PR +554133202830",
+            "police": "Polícia Militar: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1190",
+            "fire": "Bombeiros: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-3193",
+            "city_hall": "Prefeitura: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1122"
+          }
+        },
+        {
+          "code": "HLO02",
+          "name": "Loanda 02",
+          "city": "Loanda",
+          "lat": -22.937484,
+          "lng": -53.109985,
+          "distributor": "COPEL",
+          "hasGTY": false,
+          "security": {
+            "direct": "COPOM PR +554133202830",
+            "police": "Polícia Militar: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1190",
+            "fire": "Bombeiros: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-3193",
+            "city_hall": "Prefeitura: R. Sete de Setembro, 654 - Centro, Loanda - PR, 87900-000, tel (44) 3423-1122"
+          }
+        },
+        {
+          "code": "HMM01",
+          "name": "Munhoz de Melo",
+          "city": "Munhoz de Melo",
+          "lat": -23.211234,
+          "lng": -51.756532,
+          "distributor": "COPEL",
+          "hasGTY": true,
+          "security": {
+            "direct": "Filipe Cândido +554499382650",
+            "police": "COPOM PR (41) 33220-830 Polícia Militar: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-1190",
+            "fire": "Bombeiros: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-3193",
+            "city_hall": "Prefeitura: R. Presidente Vargas, 987 - Centro, Munhoz de Melo - PR, 86970-000, tel (43) 3473-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Lucas (07h às 19h)",
+              "night": "Josival (19h às 07h)"
+            },
+            "odd": {
+              "day": "Michelangelo (07h às 19h)",
+              "night": "Valmir (19h às 07h)"
+            }
+          }
+        },
+        {
+          "code": "HNE01",
+          "name": "Nova Esperança",
+          "city": "Nova Esperança",
+          "lat": -23.21195,
+          "lng": -52.22602,
+          "distributor": "COPEL",
+          "hasGTY": true,
+          "security": {
+            "direct": "Felipe +554498650550",
+            "police": "COPOM PR (41) 33220-830 Polícia Militar: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-1190",
+            "fire": "Bombeiros: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-3193",
+            "city_hall": "Prefeitura: R. Rui Barbosa, 147 - Centro, Nova Esperança - PR, 87600-000, tel (44) 3252-1122"
+          },
+          "schedule": {
+            "even": {
+              "day": "Junior (07h às 19h)",
+              "night": "Alex (19h às 07h)"
+            },
+            "odd": {
+              "day": "Iggor (07h às 19h)",
+              "night": "André (19h às 07h)"
+            }
+          }
+        }
+      ],
+      "RS": [
+        {
+          "code": "HSJ01",
+          "name": "São Jeronimo 01",
+          "city": "São Jerônimo",
+          "lat": -30.108649,
+          "lng": -51.8269,
+          "distributor": "CEEE",
+          "hasGTY": false,
+          "security": {
+            "direct": "28º BPM +555136512028",
+            "police": "Polícia Militar: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-1190",
+            "fire": "Bombeiros: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-3193",
+            "city_hall": "Prefeitura: R. Marechal Deodoro, 258 - Centro, São Jerônimo - RS, 96700-000, tel (51) 3654-1122"
+          }
+        }
+      ]
+    }
+  },
+  "riskData": {
+    "Norte": {
+      "percentage": 75,
+      "level": "high",
+      "description": "Alto risco devido a roubos frequentes de cabos e equipamentos"
+    },
+    "Nordeste": {
+      "percentage": 65,
+      "level": "medium",
+      "description": "Risco médio-alto com casos de vandalismo e furtos"
+    },
+    "Centro-Oeste": {
+      "percentage": 45,
+      "level": "medium",
+      "description": "Risco moderado com ocorrências esporádicas"
+    },
+    "Sudeste": {
+      "percentage": 35,
+      "level": "low",
+      "description": "Risco baixo-médio com boa cobertura de segurança"
+    },
+    "Sul": {
+      "percentage": 25,
+      "level": "low",
+      "description": "Baixo risco com infraestrutura de segurança eficiente"
+    }
+  }
+}
