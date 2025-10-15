@@ -750,11 +750,6 @@ def delete_occurrence(occurrence_id):
 # ==============================================================================
 # EXECUÇÃO DO SERVIDOR
 # ==============================================================================
-if __name__ == '__main__':
-    print("="*50)
-    print("Iniciando o servidor de monitoramento MOVISAFE AMLAT...")
-    print(f"Servidor rodando em http://127.0.0.1:5000")
-    print("Acesse http://127.0.0.1:5000/api/locations no seu navegador para testar.")
-    print("Pressione CTRL+C para parar o servidor.")
-    print("="*50)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+    app.run(debug=True)
